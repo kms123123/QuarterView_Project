@@ -13,19 +13,27 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody playerRb;
     Animator playerAnim;
+    Material playerMat;
 
     Vector3 moveDirection;
     float horizontalInput, verticalInput;
 
     [HideInInspector]
     public bool isMove;
+    [HideInInspector]
+    public bool isGodMode;
+    [HideInInspector]
+    public bool isHit;
 
     // Start is called before the first frame update
     void Start()
     {
+        isHit= false;
         isMove = false;
+        isGodMode = false;
         playerRb= GetComponent<Rigidbody>();
         playerAnim= GetComponent<Animator>();
+        playerMat = GetComponentInChildren<SkinnedMeshRenderer>().material;
     }
 
     // Update is called once per frame
@@ -78,11 +86,65 @@ public class PlayerController : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Enemy"))
         {
-            HP--;
             Vector3 forceDirection = (collision.transform.position - transform.position).normalized;
             forceDirection.y = 0;
+
+            //If GodMode power-up is obtained, it will eliminate all conflicting enemies.
+            if (isGodMode)
+            {
+                forceDirection += Vector3.up * 0.3f;
+                collision.gameObject.GetComponent<Rigidbody>().freezeRotation = false;
+                collision.gameObject.GetComponent<EnemyController>().SetDeath();
+                Destroy(collision.gameObject, 4);
+            }
+
+            //If it collides with an enemy, it suffers damage and is briefly invincible and fluidized.
+            //At this time, the enemy does not follow.
+            else
+            {
+                StartCoroutine(GracePeriod());
+                isHit = true;
+                playerMat.color = Color.yellow;
+                gameObject.layer = 11;
+                HP--;
+            }
+
             collision.rigidbody.AddForce(knockbackForce * forceDirection, ForceMode.Impulse);
         }
     }
+
+    /// <summary>
+    /// If the player acquires a power-up, the skill is used.
+    /// </summary>
+    /// <param name="other"></param>
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.CompareTag("GodMode"))
+        {
+            StartCoroutine(GodMode());
+            Destroy(other.gameObject);
+            isGodMode = true;
+        }
+    }
+
+    /// <summary>
+    /// When attacked by an enemy, it becomes invincible for a while and ignores the conflict.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator GracePeriod()
+    {
+        yield return new WaitForSeconds(1f);
+        isHit= false;
+        playerMat.color = Color.white;
+        gameObject.layer = 9;
+    }
+
+    IEnumerator GodMode()
+    {
+        yield return new WaitForSeconds(3f);
+        isGodMode = false;
+    }
+
+
 
 }
