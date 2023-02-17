@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEditor.UIElements;
+using Unity.VisualScripting;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,15 +15,21 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     GameObject[] enemyList;
     [SerializeField]
-    GameObject[] spawnPoints;
+    GameObject[] enemySpawnPoints;
+    [SerializeField]
+    GameObject[] powerUpList;
+
+
     [SerializeField]
     float firstLevelTime;
     [SerializeField]
     float levelWeight;
     [SerializeField]
     float enemyCoolTime;
+    [SerializeField]
+    float powerUpCoolTime;
 
-
+    float powerUpPosX, powerUpPosZ;
     float time;
     [SerializeField]
     int level;
@@ -43,6 +51,7 @@ public class GameManager : MonoBehaviour
         {
             time += Time.deltaTime;
             enemyCoolTime -= Time.deltaTime;
+            powerUpCoolTime -= Time.deltaTime;
             if(time > 10 * level)
             {
                 level++;
@@ -55,16 +64,17 @@ public class GameManager : MonoBehaviour
         }
 
         SpawnEnemy();
+        SpawnPowerUp();
     }
 
     void SpawnEnemy()
     {
         if(enemyCoolTime < 0)
         {
-            int enemyIndex = Random.Range(0, enemyList.Length);
-            int spawnIndex = Random.Range(0, spawnPoints.Length);
+            int enemyIndex = UnityEngine.Random.Range(0, enemyList.Length);
+            int spawnIndex = UnityEngine.Random.Range(0, enemySpawnPoints.Length);
 
-            Instantiate(enemyList[enemyIndex], spawnPoints[spawnIndex].transform.position, Quaternion.identity);
+            Instantiate(enemyList[enemyIndex], enemySpawnPoints[spawnIndex].transform.position, Quaternion.identity);
             enemyCoolTime = firstLevelTime - (level * levelWeight);
             if(enemyCoolTime < 0.5f)
             {
@@ -73,5 +83,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    
+    void SpawnPowerUp()
+    {
+        if (powerUpCoolTime < 0)
+        {
+            int powerUpIndex = UnityEngine.Random.Range(0, powerUpList.Length);
+            powerUpPosX = UnityEngine.Random.Range(-9f, 9f);
+            float temp = Math.Abs(powerUpPosX);
+            temp = 9f - temp;
+            powerUpPosZ = UnityEngine.Random.Range(-temp, temp);
+
+            Instantiate(powerUpList[powerUpIndex], new Vector3(powerUpPosX, 1.0f, powerUpPosZ), Quaternion.Euler(270f, 0f, 0f));
+            powerUpCoolTime = 10f;
+        }
+    }
+
+
 }

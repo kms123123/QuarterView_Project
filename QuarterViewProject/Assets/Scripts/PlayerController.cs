@@ -77,9 +77,10 @@ public class PlayerController : MonoBehaviour
         }
 
         //Time Stop Skill
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.Space) && timeStop > 0)
         {
             StartCoroutine(EndTimeStop());
+            timeStop--;
             timeStopBlinkTimer = timeStopBlinkDuration;
             Debug.Log("Start Time Stop");
             isTimeStop = true;
@@ -186,6 +187,12 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(GodMode());
             Destroy(other.gameObject);
             isGodMode = true;
+        }
+
+        if(other.gameObject.CompareTag("TimeStop"))
+        {
+            Destroy(other.gameObject);
+            timeStop++;
         }
     }
 
