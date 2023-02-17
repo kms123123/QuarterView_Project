@@ -19,6 +19,8 @@ public class EnemyController : MonoBehaviour
     bool isAlive;
 
     
+
+    
     // Start is called before the first frame update
     void Awake()
     {
@@ -48,7 +50,7 @@ public class EnemyController : MonoBehaviour
         {
             playerDirection = (player.transform.position - transform.position).normalized;
             playerDirection.y = 0;
-            if (playerController.isMove && !playerController.isHit)
+            if (playerController.isMove && !playerController.isHit && !playerController.isTimeStop)
             {
                 EnemyMove();
             }

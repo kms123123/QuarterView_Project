@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEditor.UIElements;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,13 +10,27 @@ public class GameManager : MonoBehaviour
     PlayerController playerController;
     [SerializeField]
     TextMeshProUGUI timer;
+    [SerializeField]
+    GameObject[] enemyList;
+    [SerializeField]
+    GameObject[] spawnPoints;
+    [SerializeField]
+    float firstLevelTime;
+    [SerializeField]
+    float levelWeight;
+    [SerializeField]
+    float enemyCoolTime;
+
 
     float time;
+    [SerializeField]
+    int level;
 
     // Start is called before the first frame update
     void Start()
     {
         time = 0;
+        level = 1;
     }
 
     // Update is called once per frame
@@ -27,11 +42,36 @@ public class GameManager : MonoBehaviour
         if(playerController.isMove) 
         {
             time += Time.deltaTime;
+            enemyCoolTime -= Time.deltaTime;
+            if(time > 10 * level)
+            {
+                level++;
+            }
         }
 
         if(time > 10)
         {
             Debug.Log("Win!");
         }
+
+        SpawnEnemy();
     }
+
+    void SpawnEnemy()
+    {
+        if(enemyCoolTime < 0)
+        {
+            int enemyIndex = Random.Range(0, enemyList.Length);
+            int spawnIndex = Random.Range(0, spawnPoints.Length);
+
+            Instantiate(enemyList[enemyIndex], spawnPoints[spawnIndex].transform.position, Quaternion.identity);
+            enemyCoolTime = firstLevelTime - (level * levelWeight);
+            if(enemyCoolTime < 0.5f)
+            {
+                enemyCoolTime = 0.5f;
+            }
+        }
+    }
+
+    
 }
