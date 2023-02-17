@@ -5,6 +5,7 @@ using TMPro;
 using UnityEditor.UIElements;
 using Unity.VisualScripting;
 using System;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -30,6 +31,7 @@ public class GameManager : MonoBehaviour
     float powerUpCoolTime;
 
     float powerUpPosX, powerUpPosZ;
+    Image[] heartUIList;
     float time;
     [SerializeField]
     int level;
@@ -45,7 +47,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         //Setting Timer UI
-        timer.text = "Time: " + string.Format("{0:F3}", time) + "s";
+        timer.text = "Time: " + string.Format("{0:F2}", time) + "s";
 
         if(playerController.isMove) 
         {

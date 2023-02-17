@@ -8,22 +8,33 @@ public class PlayerController : MonoBehaviour
     float moveSpeed;
     [SerializeField]
     float knockbackForce;
-    [SerializeField]
-    int HP;
+    
+    public int HP;
     [SerializeField]
     int timeStop;
     [SerializeField]
     float timeStopBlinkDuration;
     [SerializeField]
     float timeStopBlinkIntensity;
+    [SerializeField]
+    float godModeTime;
+    [SerializeField]
+    HealthBar healthBar;
+    [SerializeField]
+    SkillBar skillBar;
 
     Rigidbody playerRb;
     Animator playerAnim;
     Material playerMat;
-
+    
     Vector3 moveDirection;
     float horizontalInput, verticalInput;
     float timeStopBlinkTimer;
+
+    [HideInInspector]
+    public float GodModeInTime;
+    [HideInInspector]
+    public float TimeStopInTime;
 
     Ray ray;
     bool isWall;
@@ -48,6 +59,8 @@ public class PlayerController : MonoBehaviour
         isMove = false;
         isGodMode = false;
         isTimeStop = false;
+        GodModeInTime = godModeTime;
+        TimeStopInTime = timeStopBlinkDuration;
         playerRb= GetComponent<Rigidbody>();
         playerAnim= GetComponent<Animator>();
         playerMat = GetComponentInChildren<SkinnedMeshRenderer>().material;
@@ -59,16 +72,7 @@ public class PlayerController : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        //Getting Boolean(Player is Moving)
-        if(horizontalInput != 0 || verticalInput != 0)
-        {
-            isMove = true;
-        }
-
-        else
-        {
-            isMove = false;
-        }
+        CheckMove();
 
         //Player Death
         if(HP <= 0 )
@@ -77,23 +81,63 @@ public class PlayerController : MonoBehaviour
         }
 
         //Time Stop Skill
-        if(Input.GetKeyDown(KeyCode.Space) && timeStop > 0)
+        if(Input.GetKeyDown(KeyCode.Space) && timeStop > 0 && !isTimeStop)
         {
-            StartCoroutine(EndTimeStop());
+            TimeStopInTime = timeStopBlinkDuration;
+            skillBar.UseTimeStop();
             timeStop--;
-            timeStopBlinkTimer = timeStopBlinkDuration;
-            Debug.Log("Start Time Stop");
             isTimeStop = true;
             gameObject.layer = 11;
         }
+        
+        if(isMove)
+        {
+            ReduceSkillTime(); 
+        }
 
-        TimeStopBlink();
+
+    }
+
+    private void ReduceSkillTime()
+    {
+        if(isGodMode)
+        {
+            GodModeInTime -= Time.deltaTime;
+            if (GodModeInTime <= 0)
+            {
+                isGodMode = false;
+            }
+        }
+        
+        if(isTimeStop)
+        {
+            TimeStopInTime -= Time.deltaTime;
+            TimeStopBlink();
+            if (TimeStopInTime <= 0)
+            {
+                isTimeStop = false;
+                gameObject.layer = 9;
+            }
+        }
+    }
+
+    private void CheckMove()
+    {
+        //Getting Boolean(Player is Moving)
+        if (horizontalInput != 0 || verticalInput != 0)
+        {
+            isMove = true;
+        }
+
+        else
+        {
+            isMove = false;
+        }
     }
 
     private void TimeStopBlink()
     {
-        timeStopBlinkTimer -= Time.deltaTime;
-        float lerp = Mathf.Clamp01(timeStopBlinkTimer / timeStopBlinkDuration);
+        float lerp = Mathf.Clamp01(TimeStopInTime / timeStopBlinkDuration);
         float intensity = lerp * timeStopBlinkIntensity + 1.0f;
         if(!isHit)
         {
@@ -168,6 +212,7 @@ public class PlayerController : MonoBehaviour
                 playerMat.color = Color.yellow;
                 gameObject.layer = 11;
                 HP--;
+                healthBar.DamageinUI();
             }
 
             collision.rigidbody.AddForce(knockbackForce * forceDirection, ForceMode.Impulse);
@@ -184,8 +229,9 @@ public class PlayerController : MonoBehaviour
     {
         if(other.gameObject.CompareTag("GodMode"))
         {
-            StartCoroutine(GodMode());
+            GodModeInTime = godModeTime;
             Destroy(other.gameObject);
+            skillBar.UseGodMode();
             isGodMode = true;
         }
 
@@ -206,12 +252,6 @@ public class PlayerController : MonoBehaviour
         isHit= false;
         playerMat.color = Color.white;
         gameObject.layer = 9;
-    }
-
-    IEnumerator GodMode()
-    {
-        yield return new WaitForSeconds(3f);
-        isGodMode = false;
     }
 
 
