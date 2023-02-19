@@ -1954,6 +1954,13 @@ MonoBehaviour:
   timeStop: 1
   timeStopBlinkDuration: 3
   timeStopBlinkIntensity: 2
+  godModeTime: 0
+  healthBar: {fileID: 0}
+  skillBar: {fileID: 0}
+  AOEAura: {fileID: 0}
+  AOERemainTime: 0
+  GodModeInTime: 0
+  TimeStopInTime: 0
   isMove: 0
   isGodMode: 0
   isHit: 0

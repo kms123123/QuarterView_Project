@@ -15,6 +15,7 @@ public class EnemyController : MonoBehaviour
     PlayerController playerController;
     Material enemyMat;
     Animator enemyAnim;
+    AudioSource enemyAudio;
 
     bool isAlive;
 
@@ -30,6 +31,7 @@ public class EnemyController : MonoBehaviour
         playerController = player.GetComponent<PlayerController>();
         enemyMat = GetComponentInChildren<SkinnedMeshRenderer>().material;
         enemyAnim = GetComponent<Animator>();
+        enemyAudio = GetComponent<AudioSource>();
     }
 
     public void SetDeath()
@@ -38,6 +40,7 @@ public class EnemyController : MonoBehaviour
         gameObject.layer = 7;
         enemyMat.color = Color.gray;
         enemyAnim.enabled= false;
+        enemyAudio.Play();
     }
 
     /// <summary>

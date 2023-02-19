@@ -11,7 +11,7 @@ public class Aura : MonoBehaviour
     [SerializeField]
     Vector3 offset;
     [SerializeField]
-    GameObject aura;
+    GameObject[] aura;
     
     // Start is called before the first frame update
     void Start()
@@ -29,12 +29,22 @@ public class Aura : MonoBehaviour
     {
         if(playerController.isGodMode)
         {
-            aura.SetActive(true);
+            aura[0].SetActive(true);
         }
 
         else
         {
-            aura.SetActive(false);
+            aura[0].SetActive(false);
+        }
+
+        if(playerController.isSpeedUp)
+        {
+            aura[1].SetActive(true);
+        }
+
+        else
+        {
+            aura[1].SetActive(false);
         }
     }
 }

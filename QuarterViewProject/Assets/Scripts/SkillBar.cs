@@ -12,9 +12,11 @@ public class SkillBar : MonoBehaviour
 
     GameObject godModeImage;
     GameObject timeStopImage;
+    GameObject speedUpImage;
 
     bool isGodMode;
     bool isTimeStop;
+    bool isSpeedUp;
 
     // Start is called before the first frame update
     void Start()
@@ -48,6 +50,20 @@ public class SkillBar : MonoBehaviour
                 isTimeStop= false;
             }
         }
+
+        if (isSpeedUp)
+        {
+            speedUpImage.GetComponent<Image>().fillAmount = playerController.SpeedUpInTime / 3;
+
+            if (!playerController.isSpeedUp)
+            {
+                Destroy(speedUpImage);
+                speedUpImage = null;
+                isSpeedUp = false;
+            }
+        }
+
+
     }
 
     public void UseGodMode()
@@ -67,6 +83,16 @@ public class SkillBar : MonoBehaviour
             isTimeStop = true;
             timeStopImage = Instantiate(skillList[1]);
             timeStopImage.transform.SetParent(transform);
+        }
+    }
+
+    public void UseSpeedUp()
+    {
+        if(!isSpeedUp)
+        {
+            isSpeedUp = true;
+            speedUpImage = Instantiate(skillList[2]);
+            speedUpImage.transform.SetParent(transform);
         }
     }
 }

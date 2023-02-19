@@ -6,8 +6,8 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField]
     float moveSpeed;
-    [SerializeField]
-    float knockbackForce;
+    
+    public float knockbackForce;
     
     public int HP;
     [SerializeField]
@@ -19,22 +19,37 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     float godModeTime;
     [SerializeField]
+    float speedUpSpeed;
+    [SerializeField]
+    float speedUpTime;
+    [SerializeField]
     HealthBar healthBar;
     [SerializeField]
     SkillBar skillBar;
+    [SerializeField]
+    GameObject AOEAura;
+    public float AOERemainTime;
+    [SerializeField]
+    AudioClip timeStopAudio;
+    [SerializeField]
+    AudioClip hitAudio;
 
     Rigidbody playerRb;
     Animator playerAnim;
     Material playerMat;
+    AudioSource playerAudioSource;
     
     Vector3 moveDirection;
     float horizontalInput, verticalInput;
     float timeStopBlinkTimer;
+    float originalSpeed;
 
     [HideInInspector]
     public float GodModeInTime;
     [HideInInspector]
     public float TimeStopInTime;
+    [HideInInspector]
+    public float SpeedUpInTime;
 
     Ray ray;
     bool isWall;
@@ -50,6 +65,8 @@ public class PlayerController : MonoBehaviour
     public bool isHit;
     [HideInInspector]
     public bool isTimeStop;
+    [HideInInspector]
+    public bool isSpeedUp;
 
 
     // Start is called before the first frame update
@@ -59,11 +76,14 @@ public class PlayerController : MonoBehaviour
         isMove = false;
         isGodMode = false;
         isTimeStop = false;
+        isSpeedUp= false;
+        originalSpeed = moveSpeed;
         GodModeInTime = godModeTime;
         TimeStopInTime = timeStopBlinkDuration;
         playerRb= GetComponent<Rigidbody>();
         playerAnim= GetComponent<Animator>();
         playerMat = GetComponentInChildren<SkinnedMeshRenderer>().material;
+        playerAudioSource= GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -84,10 +104,19 @@ public class PlayerController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space) && timeStop > 0 && !isTimeStop)
         {
             TimeStopInTime = timeStopBlinkDuration;
+            playerAudioSource.PlayOneShot(timeStopAudio, 1.0f);
             skillBar.UseTimeStop();
             timeStop--;
             isTimeStop = true;
-            gameObject.layer = 11;
+            if(isGodMode)
+            {
+                gameObject.layer = 15;
+            }
+            else
+            {
+                gameObject.layer = 14;
+            }
+            
         }
         
         if(isMove)
@@ -95,9 +124,11 @@ public class PlayerController : MonoBehaviour
             ReduceSkillTime(); 
         }
 
-
     }
 
+    /// <summary>
+    /// Reduce the duration of skills in-time. When the duration is up, restore the player's state.
+    /// </summary>
     private void ReduceSkillTime()
     {
         if(isGodMode)
@@ -106,6 +137,10 @@ public class PlayerController : MonoBehaviour
             if (GodModeInTime <= 0)
             {
                 isGodMode = false;
+                if(isTimeStop)
+                {
+                    gameObject.layer = 14;
+                }
             }
         }
         
@@ -117,6 +152,16 @@ public class PlayerController : MonoBehaviour
             {
                 isTimeStop = false;
                 gameObject.layer = 9;
+            }
+        }
+
+        if(isSpeedUp)
+        {
+            SpeedUpInTime -= Time.deltaTime;
+            if(SpeedUpInTime <= 0)
+            {
+                isSpeedUp = false;
+                moveSpeed = originalSpeed;
             }
         }
     }
@@ -212,6 +257,7 @@ public class PlayerController : MonoBehaviour
                 playerMat.color = Color.yellow;
                 gameObject.layer = 11;
                 HP--;
+                playerAudioSource.PlayOneShot(hitAudio, 1f);
                 healthBar.DamageinUI();
             }
 
@@ -233,12 +279,31 @@ public class PlayerController : MonoBehaviour
             Destroy(other.gameObject);
             skillBar.UseGodMode();
             isGodMode = true;
+            if(isTimeStop)
+            {
+                gameObject.layer = 15;
+            }
         }
 
         if(other.gameObject.CompareTag("TimeStop"))
         {
             Destroy(other.gameObject);
             timeStop++;
+        }
+
+        if(other.gameObject.CompareTag("AOE"))
+        {
+            Instantiate(AOEAura, other.gameObject.transform.position - new Vector3(0, 0.8f, 0), Quaternion.identity);
+            Destroy(other.gameObject);
+        }
+
+        if(other.gameObject.CompareTag("SpeedUp"))
+        {
+            SpeedUpInTime = speedUpTime;
+            Destroy(other.gameObject);
+            skillBar.UseSpeedUp();
+            isSpeedUp = true;
+            moveSpeed = speedUpSpeed;
         }
     }
 

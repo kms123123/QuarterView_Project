@@ -52,7 +52,12 @@ public class GameManager : MonoBehaviour
         if(playerController.isMove) 
         {
             time += Time.deltaTime;
-            enemyCoolTime -= Time.deltaTime;
+
+            if(!playerController.isTimeStop)
+            {
+                enemyCoolTime -= Time.deltaTime;
+            }
+            
             powerUpCoolTime -= Time.deltaTime;
             if(time > 10 * level)
             {
