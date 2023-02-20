@@ -66,6 +66,19 @@ public class EnemyController : MonoBehaviour
         enemyRb.MovePosition(transform.position + (playerDirection * moveSpeed * Time.deltaTime));
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("LaserLine"))
+        {
+            float knockBackForce = playerController.knockbackForce;
+            Vector3 knockBackDir = -playerDirection;
+            enemyRb.freezeRotation = false;
+            enemyRb.AddForce(knockBackDir * knockBackForce, ForceMode.Impulse);
+            Destroy(gameObject, 4f);
+            SetDeath();
+        }
+    }
+
     private void Update()
     {
 

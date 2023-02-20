@@ -13,10 +13,12 @@ public class SkillBar : MonoBehaviour
     GameObject godModeImage;
     GameObject timeStopImage;
     GameObject speedUpImage;
+    GameObject LaserImage;
 
     bool isGodMode;
     bool isTimeStop;
     bool isSpeedUp;
+    bool isLaser;
 
     // Start is called before the first frame update
     void Start()
@@ -63,6 +65,18 @@ public class SkillBar : MonoBehaviour
             }
         }
 
+        if(isLaser)
+        {
+            LaserImage.GetComponent<Image>().fillAmount = playerController.LaserInTime / 1;
+
+            if (!playerController.isLaser)
+            {
+                Destroy(LaserImage);
+                LaserImage = null;
+                isLaser = false;
+            }
+        }
+
 
     }
 
@@ -93,6 +107,16 @@ public class SkillBar : MonoBehaviour
             isSpeedUp = true;
             speedUpImage = Instantiate(skillList[2]);
             speedUpImage.transform.SetParent(transform);
+        }
+    }
+
+    public void UseLaser()
+    {
+        if (!isLaser)
+        {
+            isLaser = true;
+            LaserImage = Instantiate(skillList[3]);
+            LaserImage.transform.SetParent(transform);
         }
     }
 }

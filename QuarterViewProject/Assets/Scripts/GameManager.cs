@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
         {
             time += Time.deltaTime;
 
-            if(!playerController.isTimeStop)
+            if(!playerController.isTimeStop && !playerController.isHit)
             {
                 enemyCoolTime -= Time.deltaTime;
             }

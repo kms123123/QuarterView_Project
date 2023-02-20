@@ -6,10 +6,10 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField]
     float moveSpeed;
-    
     public float knockbackForce;
-    
     public int HP;
+
+
     [SerializeField]
     int timeStop;
     [SerializeField]
@@ -23,21 +23,42 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     float speedUpTime;
     [SerializeField]
+    float laserTime;
+
+
+
+    [SerializeField]
     HealthBar healthBar;
     [SerializeField]
     SkillBar skillBar;
+
+
     [SerializeField]
     GameObject AOEAura;
     public float AOERemainTime;
+
+
     [SerializeField]
     AudioClip timeStopAudio;
     [SerializeField]
     AudioClip hitAudio;
+    [SerializeField]
+    AudioClip laserGetAudio;
+    [SerializeField]
+    AudioClip godModeAudio;
+    [SerializeField]
+    AudioClip speedUpAudio;
+    [SerializeField]
+    AudioClip timeStopGetAudio;
+    [SerializeField]
+    AudioClip aoeAudio;
+
 
     Rigidbody playerRb;
     Animator playerAnim;
     Material playerMat;
     AudioSource playerAudioSource;
+    LaserMode laserMode;
     
     Vector3 moveDirection;
     float horizontalInput, verticalInput;
@@ -50,6 +71,8 @@ public class PlayerController : MonoBehaviour
     public float TimeStopInTime;
     [HideInInspector]
     public float SpeedUpInTime;
+    [HideInInspector]
+    public float LaserInTime;
 
     Ray ray;
     bool isWall;
@@ -67,6 +90,8 @@ public class PlayerController : MonoBehaviour
     public bool isTimeStop;
     [HideInInspector]
     public bool isSpeedUp;
+    [HideInInspector]
+    public bool isLaser;
 
 
     // Start is called before the first frame update
@@ -77,13 +102,16 @@ public class PlayerController : MonoBehaviour
         isGodMode = false;
         isTimeStop = false;
         isSpeedUp= false;
+        isLaser = false;
         originalSpeed = moveSpeed;
         GodModeInTime = godModeTime;
         TimeStopInTime = timeStopBlinkDuration;
+        LaserInTime = laserTime;
         playerRb= GetComponent<Rigidbody>();
         playerAnim= GetComponent<Animator>();
         playerMat = GetComponentInChildren<SkinnedMeshRenderer>().material;
         playerAudioSource= GetComponent<AudioSource>();
+        laserMode = GetComponentInChildren<LaserMode>();
     }
 
     // Update is called once per frame
@@ -162,6 +190,16 @@ public class PlayerController : MonoBehaviour
             {
                 isSpeedUp = false;
                 moveSpeed = originalSpeed;
+            }
+        }
+
+        if(isLaser)
+        {
+            LaserInTime -= Time.deltaTime;
+            if(LaserInTime <= 0)
+            {
+                isLaser = false;
+                laserMode.ShootLaser();
             }
         }
     }
@@ -276,6 +314,7 @@ public class PlayerController : MonoBehaviour
         if(other.gameObject.CompareTag("GodMode"))
         {
             GodModeInTime = godModeTime;
+            playerAudioSource.PlayOneShot(godModeAudio, 1f);
             Destroy(other.gameObject);
             skillBar.UseGodMode();
             isGodMode = true;
@@ -287,6 +326,7 @@ public class PlayerController : MonoBehaviour
 
         if(other.gameObject.CompareTag("TimeStop"))
         {
+            playerAudioSource.PlayOneShot(timeStopGetAudio, 1f);
             Destroy(other.gameObject);
             timeStop++;
         }
@@ -294,16 +334,27 @@ public class PlayerController : MonoBehaviour
         if(other.gameObject.CompareTag("AOE"))
         {
             Instantiate(AOEAura, other.gameObject.transform.position - new Vector3(0, 0.8f, 0), Quaternion.identity);
+            playerAudioSource.PlayOneShot(aoeAudio, 1f);
             Destroy(other.gameObject);
         }
 
         if(other.gameObject.CompareTag("SpeedUp"))
         {
             SpeedUpInTime = speedUpTime;
+            playerAudioSource.PlayOneShot(speedUpAudio, 1f);
             Destroy(other.gameObject);
             skillBar.UseSpeedUp();
             isSpeedUp = true;
             moveSpeed = speedUpSpeed;
+        }
+
+        if(other.gameObject.CompareTag("Laser"))
+        {
+            LaserInTime = laserTime;
+            playerAudioSource.PlayOneShot(laserGetAudio, 1f);
+            skillBar.UseLaser();
+            isLaser= true;
+            Destroy(other.gameObject);
         }
     }
 

@@ -46,5 +46,15 @@ public class Aura : MonoBehaviour
         {
             aura[1].SetActive(false);
         }
+
+        if(playerController.isLaser)
+        {
+            aura[2].SetActive(true);
+        }
+
+        else
+        {
+            aura[2].SetActive(false);
+        }
     }
 }

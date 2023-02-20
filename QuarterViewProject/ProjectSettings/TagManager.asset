@@ -10,6 +10,9 @@ TagManager:
   - AOE
   - SpeedUp
   - FxTemporaire
+  - Laser
+  - Wall
+  - LaserLine
   layers:
   - Default
   - TransparentFX
