@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using System;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 
 public class GameManager : MonoBehaviour
 {
@@ -25,6 +26,15 @@ public class GameManager : MonoBehaviour
     GameObject playingGameUI;
     [SerializeField]
     GameObject gameOverUI;
+    [SerializeField]
+    GameObject optionUI;
+
+    [SerializeField]
+    Slider bgmSlider;
+    [SerializeField]
+    Slider sfxSlider;
+    [SerializeField]
+    AudioMixer mixer;
 
 
     [SerializeField]
@@ -51,6 +61,8 @@ public class GameManager : MonoBehaviour
         time = 0;
         level = 1;
         enemyKills = 0;
+        bgmSlider.value = PlayerPrefs.GetFloat("BGM", 1f);
+        sfxSlider.value = PlayerPrefs.GetFloat("SFX", 1f);
     }
 
     // Update is called once per frame
@@ -125,7 +137,34 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(1);
+    }
+
+    public void GoToMain()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void OpenOpiton()
+    {
+        optionUI.SetActive(true);
+    }
+
+    public void ExitOption()
+    {
+        optionUI.SetActive(false);
+    }
+
+    public void SetBGM()
+    {
+        mixer.SetFloat("BGMVolume", Mathf.Log10(bgmSlider.value) * 20);
+        PlayerPrefs.SetFloat("BGM", bgmSlider.value);
+    }
+
+    public void SetSFX()
+    {
+        mixer.SetFloat("SFXVolume", Mathf.Log10(sfxSlider.value) * 20);
+        PlayerPrefs.SetFloat("SFX", sfxSlider.value);
     }
 
 
