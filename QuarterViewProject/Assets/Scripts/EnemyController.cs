@@ -1,14 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
     [SerializeField]
     float moveSpeed;
-    
 
+    GameManager gameManager;
     GameObject player;
     Rigidbody enemyRb;
     Vector3 playerDirection;
@@ -19,12 +20,10 @@ public class EnemyController : MonoBehaviour
 
     bool isAlive;
 
-    
-
-    
     // Start is called before the first frame update
     void Awake()
     {
+        gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
         player = GameObject.FindWithTag("Player");
         isAlive = true;
         enemyRb= GetComponent<Rigidbody>();
@@ -40,6 +39,7 @@ public class EnemyController : MonoBehaviour
         gameObject.layer = 7;
         enemyMat.color = Color.gray;
         enemyAnim.enabled= false;
+        gameManager.enemyKills++;
         enemyAudio.Play();
     }
 
@@ -81,6 +81,5 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-
     }
 }

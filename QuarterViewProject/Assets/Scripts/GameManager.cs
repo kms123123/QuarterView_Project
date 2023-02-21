@@ -6,6 +6,7 @@ using UnityEditor.UIElements;
 using Unity.VisualScripting;
 using System;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,6 +20,11 @@ public class GameManager : MonoBehaviour
     GameObject[] enemySpawnPoints;
     [SerializeField]
     GameObject[] powerUpList;
+
+    [SerializeField]
+    GameObject playingGameUI;
+    [SerializeField]
+    GameObject gameOverUI;
 
 
     [SerializeField]
@@ -36,11 +42,15 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     int level;
 
+    [HideInInspector]
+    public int enemyKills;
+
     // Start is called before the first frame update
     void Start()
     {
         time = 0;
         level = 1;
+        enemyKills = 0;
     }
 
     // Update is called once per frame
@@ -49,7 +59,7 @@ public class GameManager : MonoBehaviour
         //Setting Timer UI
         timer.text = "Time: " + string.Format("{0:F2}", time) + "s";
 
-        if(playerController.isMove) 
+        if(playerController.isMove && !playerController.isDead) 
         {
             time += Time.deltaTime;
 
@@ -72,6 +82,14 @@ public class GameManager : MonoBehaviour
 
         SpawnEnemy();
         SpawnPowerUp();
+
+        if(playerController.isDead)
+        {
+            playingGameUI.SetActive(false);
+            gameOverUI.SetActive(true);
+            GameOverUI gameOverSetting = gameOverUI.GetComponent<GameOverUI>();
+            gameOverSetting.GameOverUISetting(time, enemyKills);
+        }
     }
 
     void SpawnEnemy()
@@ -103,6 +121,11 @@ public class GameManager : MonoBehaviour
             Instantiate(powerUpList[powerUpIndex], new Vector3(powerUpPosX, 1.0f, powerUpPosZ), Quaternion.Euler(270f, 0f, 0f));
             powerUpCoolTime = 10f;
         }
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
 

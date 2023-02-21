@@ -10,8 +10,8 @@ public class PlayerController : MonoBehaviour
     public int HP;
 
 
-    [SerializeField]
-    int timeStop;
+
+    public int timeStop;
     [SerializeField]
     float timeStopBlinkDuration;
     [SerializeField]
@@ -92,6 +92,8 @@ public class PlayerController : MonoBehaviour
     public bool isSpeedUp;
     [HideInInspector]
     public bool isLaser;
+    [HideInInspector]
+    public bool isDead;
 
 
     // Start is called before the first frame update
@@ -103,6 +105,7 @@ public class PlayerController : MonoBehaviour
         isTimeStop = false;
         isSpeedUp= false;
         isLaser = false;
+        isDead= false;
         originalSpeed = moveSpeed;
         GodModeInTime = godModeTime;
         TimeStopInTime = timeStopBlinkDuration;
@@ -126,10 +129,13 @@ public class PlayerController : MonoBehaviour
         if(HP <= 0 )
         {
             Debug.Log("Game Over!");
+            isDead = true;
+            playerAnim.SetTrigger("isDead");
+            gameObject.layer = 11;
         }
 
         //Time Stop Skill
-        if(Input.GetKeyDown(KeyCode.Space) && timeStop > 0 && !isTimeStop)
+        if(Input.GetKeyDown(KeyCode.Space) && timeStop > 0 && !isTimeStop && !isDead)
         {
             TimeStopInTime = timeStopBlinkDuration;
             playerAudioSource.PlayOneShot(timeStopAudio, 1.0f);
@@ -246,8 +252,11 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        MovePlayer();
-        StopMove();
+        if(!isDead)
+        {
+            MovePlayer();
+            StopMove();
+        }
     }
 
     /// <summary>

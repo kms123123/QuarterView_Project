@@ -13,6 +13,7 @@ TagManager:
   - Laser
   - Wall
   - LaserLine
+  - GameManager
   layers:
   - Default
   - TransparentFX
