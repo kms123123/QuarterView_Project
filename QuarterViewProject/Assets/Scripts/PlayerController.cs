@@ -135,7 +135,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //Time Stop Skill
-        if(Input.GetKeyDown(KeyCode.Space) && timeStop > 0 && !isTimeStop && !isDead)
+        if(Input.GetKeyDown(KeyCode.Space) && timeStop > 0 && !isTimeStop && !isDead && !isHit)
         {
             TimeStopInTime = timeStopBlinkDuration;
             playerAudioSource.PlayOneShot(timeStopAudio, 1.0f);

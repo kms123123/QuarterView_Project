@@ -131,7 +131,14 @@ public class GameManager : MonoBehaviour
             powerUpPosZ = UnityEngine.Random.Range(-temp, temp);
 
             Instantiate(powerUpList[powerUpIndex], new Vector3(powerUpPosX, 1.0f, powerUpPosZ), Quaternion.Euler(270f, 0f, 0f));
-            powerUpCoolTime = 10f;
+            if(level >= 5)
+            {
+                powerUpCoolTime = 5f;
+            }
+            else
+            {
+                powerUpCoolTime = 7f;
+            }
         }
     }
 

@@ -12,26 +12,35 @@ public class GameOverUI : MonoBehaviour
     TextMeshProUGUI enemyText;
     [SerializeField]
     TextMeshProUGUI rankText;
+    [SerializeField]
+    TextMeshProUGUI scoreText;
+    [SerializeField]
+    int timeWeight;
+    [SerializeField]
+    int enemyWeight;
 
 
     public void GameOverUISetting(float time, int enemy)
     {
+        float score = time * timeWeight + enemy * enemyWeight;
         timeText.text = string.Format("{0:F2}", time) + "S";
         enemyText.text = enemy.ToString() + " ENEMIES";
+        int resultScore = (int)score;
+        scoreText.text = string.Format("{0:#,###}", resultScore);
 
-        if(time > 60)
+        if(resultScore > 50000)
         {
             rankText.text = "Well Done!!";
             rankText.color = Color.HSVToRGB(180f / 360f, 1f, 1f);
         }
 
-        else if(time > 40)
+        else if(resultScore > 40000)
         {
             rankText.text = "Good Job!";
             rankText.color = Color.HSVToRGB(110f / 360f, 1f, 1f);
         }
 
-        else if(time > 20)
+        else if(resultScore > 20000)
         {
             rankText.text = "SO-SO";
             rankText.color = Color.HSVToRGB(60f / 360f, 1f, 1f);

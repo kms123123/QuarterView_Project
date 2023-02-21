@@ -12,11 +12,17 @@ public class GM : MonoBehaviour
     [SerializeField]
     GameObject optionUI;
     [SerializeField]
+    GameObject rankUI;
+    [SerializeField]
     Slider bgmSlider;
     [SerializeField]
     Slider sfxSlider;
     [SerializeField]
     AudioMixer mixer;
+
+    bool isTutorialOn;
+    bool isOptionOn;
+    bool isRankOn;
 
 
     public void Start()
@@ -31,12 +37,17 @@ public class GM : MonoBehaviour
     /// </summary>
     public void OpenTutorial()
     {
-        tutorialUI.SetActive(true);
+        if(!isOptionOn && !isRankOn)
+        {
+            tutorialUI.SetActive(true);
+        }
+        isTutorialOn= true;
     }
 
     public void ExitTutorial()
     {
         tutorialUI.SetActive(false);
+        isTutorialOn= false;
     }
 
     public void GameStart()
@@ -46,12 +57,32 @@ public class GM : MonoBehaviour
     
     public void OpenOption()
     {
-        optionUI.SetActive(true);
+        if (!isTutorialOn && !isRankOn)
+        {
+            optionUI.SetActive(true);
+        }
+        isOptionOn= true;
     }
 
     public void ExitOption()
     {
         optionUI.SetActive(false);
+        isOptionOn= false;
+    }
+
+    public void OpenRank()
+    {
+        if (!isTutorialOn && !isOptionOn)
+        {
+            rankUI.SetActive(true);
+        }
+        isRankOn= true;
+    }
+
+    public void ExitRank()
+    {
+        rankUI.SetActive(false);
+        isRankOn= false;
     }
 
     public void ExitButton()
