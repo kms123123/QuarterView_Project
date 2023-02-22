@@ -91,11 +91,6 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if(time > 10)
-        {
-            Debug.Log("Win!");
-        }
-
         SpawnEnemy();
         SpawnPowerUp();
 

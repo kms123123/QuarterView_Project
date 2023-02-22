@@ -128,7 +128,6 @@ public class PlayerController : MonoBehaviour
         //Player Death
         if(HP <= 0 )
         {
-            Debug.Log("Game Over!");
             isDead = true;
             playerAnim.SetTrigger("isDead");
             gameObject.layer = 11;
@@ -235,17 +234,9 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    IEnumerator EndTimeStop()
-    {
-        yield return new WaitForSeconds(3f);
-        Debug.Log("Stop Time Stop");
-        isTimeStop = false;
-        gameObject.layer = 9;
-    }
 
     private void StopMove()
     {
-        Debug.DrawRay(transform.position, moveDirection, Color.green);
         isWall = Physics.Raycast(transform.position, moveDirection, 1, LayerMask.GetMask("Wall"));
     }
 

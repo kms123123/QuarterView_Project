@@ -15,3 +15,4 @@ public class User
         this.score = score;
     }
 }
+
