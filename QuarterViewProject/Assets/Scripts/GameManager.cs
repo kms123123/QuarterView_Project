@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     GameObject[] enemySpawnPoints;
     [SerializeField]
     GameObject[] powerUpList;
+    [SerializeField]
+    DatabaseManager databaseManager;
 
     [SerializeField]
     GameObject playingGameUI;
@@ -28,6 +30,8 @@ public class GameManager : MonoBehaviour
     GameObject gameOverUI;
     [SerializeField]
     GameObject optionUI;
+    [SerializeField]
+    GameObject rankUI;
 
     [SerializeField]
     Slider bgmSlider;
@@ -101,6 +105,7 @@ public class GameManager : MonoBehaviour
             gameOverUI.SetActive(true);
             GameOverUI gameOverSetting = gameOverUI.GetComponent<GameOverUI>();
             gameOverSetting.GameOverUISetting(time, enemyKills);
+            databaseManager.SetData(time, enemyKills, gameOverSetting.GetScore(time, enemyKills));
         }
     }
 
@@ -172,6 +177,16 @@ public class GameManager : MonoBehaviour
     {
         mixer.SetFloat("SFXVolume", Mathf.Log10(sfxSlider.value) * 20);
         PlayerPrefs.SetFloat("SFX", sfxSlider.value);
+    }
+
+    public void OpenRankUI()
+    {
+        rankUI.SetActive(true);
+    }
+
+    public void ExitRankUI()
+    {
+        rankUI.SetActive(false);
     }
 
 

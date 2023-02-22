@@ -47,7 +47,7 @@ public class LaserMode : MonoBehaviour
                 if(hit.collider.gameObject.CompareTag("Wall"))
                 {
                     laserLineRenderer.SetPosition(1, hit.point);
-                    collider.size = new Vector3(0.5f, 0.5f, Vector3.Distance(startpos.position, hit.point));
+                    collider.size = new Vector3(1f, 1f, Vector3.Distance(startpos.position, hit.point));
                     line.transform.position = (startpos.position + hit.point) / 2;
                     collider.transform.LookAt(hit.point);
                     break;

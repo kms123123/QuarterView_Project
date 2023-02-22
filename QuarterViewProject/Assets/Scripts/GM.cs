@@ -14,6 +14,8 @@ public class GM : MonoBehaviour
     [SerializeField]
     GameObject rankUI;
     [SerializeField]
+    GameObject searchUI;
+    [SerializeField]
     Slider bgmSlider;
     [SerializeField]
     Slider sfxSlider;
@@ -100,5 +102,15 @@ public class GM : MonoBehaviour
     {
         mixer.SetFloat("SFXVolume", Mathf.Log10(sfxSlider.value) * 20);
         PlayerPrefs.SetFloat("SFX", sfxSlider.value);
+    }
+
+    public void OpenSearch()
+    {
+        searchUI.SetActive(true);
+    }
+
+    public void CloseSearch()
+    {
+        searchUI.SetActive(false);
     }
 }

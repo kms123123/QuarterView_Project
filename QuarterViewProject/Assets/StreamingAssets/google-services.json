@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "328844018452",
+    "firebase_url": "https://runawayprincess-5287d-default-rtdb.firebaseio.com",
+    "project_id": "runawayprincess-5287d",
+    "storage_bucket": "runawayprincess-5287d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:328844018452:android:8c04473bae8baf22de3801",
+        "android_client_info": {
+          "package_name": "com.DefaultCompany.QuarterViewProject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "328844018452-ag9od6qp3b87ossttijul821tsustq3i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBa8X-G7pM1AVQ3KMAiJqZVit0ROkJ7w4c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "328844018452-ag9od6qp3b87ossttijul821tsustq3i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

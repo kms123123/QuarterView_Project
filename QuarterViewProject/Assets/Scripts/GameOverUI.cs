@@ -19,7 +19,7 @@ public class GameOverUI : MonoBehaviour
     [SerializeField]
     int enemyWeight;
 
-
+    
     public void GameOverUISetting(float time, int enemy)
     {
         float score = time * timeWeight + enemy * enemyWeight;
@@ -28,7 +28,7 @@ public class GameOverUI : MonoBehaviour
         int resultScore = (int)score;
         scoreText.text = string.Format("{0:#,###}", resultScore);
 
-        if(resultScore > 50000)
+        if(resultScore > 60000)
         {
             rankText.text = "Well Done!!";
             rankText.color = Color.HSVToRGB(180f / 360f, 1f, 1f);
@@ -51,6 +51,13 @@ public class GameOverUI : MonoBehaviour
             rankText.text = "Cheer Up...";
             rankText.color = Color.HSVToRGB(0f, 0f, 0.5f);
         }
+    }
+
+    public int GetScore(float time, int enemy) 
+    {
+        float score = time * timeWeight + enemy * enemyWeight;
+        int resultScore = (int)score;
+        return resultScore;
     }
 
 }
