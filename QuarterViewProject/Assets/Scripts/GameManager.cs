@@ -181,7 +181,11 @@ public class GameManager : MonoBehaviour
 
     public void ExitRankUI()
     {
-        rankUI.SetActive(false);
+        if(!rankUI.GetComponent<RankUI>().isLoading)
+        {
+            rankUI.SetActive(false);
+        }
+        
     }
 
 

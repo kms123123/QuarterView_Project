@@ -12,6 +12,10 @@ public class RankUI : MonoBehaviour
     [SerializeField]
     GameObject searchUI;
     [SerializeField]
+    GameObject addComplete;
+    [SerializeField]
+    GameObject searchComplete;
+    [SerializeField]
     DatabaseManager databaseManager;
     [SerializeField]
     TextMeshProUGUI[] nameList;
@@ -28,6 +32,8 @@ public class RankUI : MonoBehaviour
     [SerializeField]
     TMP_InputField searchInput;
 
+    public bool isLoading;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,28 +48,37 @@ public class RankUI : MonoBehaviour
 
     public void OpenAddUI()
     {
-        addUI.SetActive(true);
+        if(!isLoading)
+        {
+            addUI.SetActive(true);
+        }
     }
 
     public void CloseAddUI()
     {
+        addComplete.SetActive(false);
         addUI.SetActive(false);
         SetLeaderBoard();
     }
 
     public void OpenSearchUI()
     {
-        searchUI.SetActive(true);
+        if(!isLoading)
+        {
+            searchUI.SetActive(true);
+        }
     }
 
     public void CloseSearchUI()
     {
+        searchComplete.SetActive(false);
         searchUI.SetActive(false);
     }
 
     public void SetLeaderBoard()
     {
         loadingText.SetActive(true);
+        isLoading= true;
         StartCoroutine(databaseManager.LoadData());
         StartCoroutine(CreatingLeaderBoard());
     }
@@ -72,6 +87,7 @@ public class RankUI : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
         loadingText.SetActive(false);
+        isLoading= false;
         if (databaseManager.nameList.Count < 5)
         {
             int count = databaseManager.nameList.Count;
@@ -117,11 +133,13 @@ public class RankUI : MonoBehaviour
             myList[2].text = string.Format("{0:F2}", databaseManager.timeList[index]);
             myList[3].text = databaseManager.enemyKillList[index].ToString();
             myList[4].text = databaseManager.scoreList[index].ToString();
+            searchComplete.SetActive(true);
         }
 
         else
         {
             searchInput.text = "No Results.";
+            searchComplete.SetActive(false);
         }
     }
 

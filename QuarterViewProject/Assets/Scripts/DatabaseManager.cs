@@ -17,6 +17,8 @@ public class DatabaseManager : MonoBehaviour
     float time;
     int enemyKill;
     int score;
+    [SerializeField]
+    GameObject addComplete;
 
     public List<string> nameList = new List<string>();
     public List<float> timeList = new List<float>();
@@ -43,6 +45,7 @@ public class DatabaseManager : MonoBehaviour
         string json = JsonUtility.ToJson(newUser);
 
         dbReference.Child("users").Child(userId).SetRawJsonValueAsync(json);
+        addComplete.SetActive(true);
     }
 
     public IEnumerator LoadData()

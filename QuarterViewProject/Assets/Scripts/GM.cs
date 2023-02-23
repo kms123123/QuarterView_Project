@@ -14,8 +14,6 @@ public class GM : MonoBehaviour
     [SerializeField]
     GameObject rankUI;
     [SerializeField]
-    GameObject searchUI;
-    [SerializeField]
     Slider bgmSlider;
     [SerializeField]
     Slider sfxSlider;
@@ -83,8 +81,12 @@ public class GM : MonoBehaviour
 
     public void ExitRank()
     {
-        rankUI.SetActive(false);
-        isRankOn= false;
+        if(!rankUI.GetComponent<RankUI>().isLoading)
+        {
+            rankUI.SetActive(false);
+            isRankOn = false;
+        }
+
     }
 
     public void ExitButton()
@@ -104,13 +106,4 @@ public class GM : MonoBehaviour
         PlayerPrefs.SetFloat("SFX", sfxSlider.value);
     }
 
-    public void OpenSearch()
-    {
-        searchUI.SetActive(true);
-    }
-
-    public void CloseSearch()
-    {
-        searchUI.SetActive(false);
-    }
 }
