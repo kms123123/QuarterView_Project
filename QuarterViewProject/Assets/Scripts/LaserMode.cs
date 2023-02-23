@@ -31,7 +31,6 @@ public class LaserMode : MonoBehaviour
         audioSource.PlayOneShot(laserShootAudio, 1f);
         foreach (var laser in laserDir)
         {
-            Debug.Log("Shoot");
             GameObject line = Instantiate(laserline);
             LineRenderer laserLineRenderer= line.GetComponent<LineRenderer>();
             BoxCollider collider = line.GetComponentInChildren<BoxCollider>();
