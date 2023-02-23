@@ -5977,7 +5977,7 @@ MonoBehaviour:
   addUI: {fileID: 0}
   searchUI: {fileID: 682643141}
   addComplete: {fileID: 0}
-  searchComplete: {fileID: 0}
+  searchComplete: {fileID: 674156173}
   databaseManager: {fileID: 1540283052}
   nameList:
   - {fileID: 566046973}
@@ -6011,6 +6011,7 @@ MonoBehaviour:
   - {fileID: 1667949505}
   loadingText: {fileID: 83373377}
   searchInput: {fileID: 271721795}
+  isLoading: 0
 --- !u!1 &730849029
 GameObject:
   m_ObjectHideFlags: 0
@@ -10353,7 +10354,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   addName: {fileID: 0}
-  searchName: {fileID: 0}
+  searchName: {fileID: 271721795}
   addComplete: {fileID: 0}
   nameList: []
   timeList: []
