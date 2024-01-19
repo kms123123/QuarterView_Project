@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEditor.UIElements;
 using Unity.VisualScripting;
 using System;
 using UnityEngine.UI;
@@ -11,14 +10,15 @@ using UnityEngine.Audio;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
+
     [SerializeField]
     PlayerController playerController;
     [SerializeField]
     TextMeshProUGUI timer;
     [SerializeField]
     GameObject[] enemyList;
-    [SerializeField]
-    GameObject[] enemySpawnPoints;
+    public GameObject[] enemySpawnPoints;
     [SerializeField]
     GameObject[] powerUpList;
     [SerializeField]
@@ -58,6 +58,11 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector]
     public int enemyKills;
+
+    private void Awake()
+    {
+        if(instance == null) instance = this;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -111,7 +116,7 @@ public class GameManager : MonoBehaviour
             int enemyIndex = UnityEngine.Random.Range(0, enemyList.Length);
             int spawnIndex = UnityEngine.Random.Range(0, enemySpawnPoints.Length);
 
-            Instantiate(enemyList[enemyIndex], enemySpawnPoints[spawnIndex].transform.position, Quaternion.identity);
+            ObjectPoolManager.instance.GetQueue(enemySpawnPoints[spawnIndex].transform.position);
             enemyCoolTime = firstLevelTime - (level * levelWeight);
             if(enemyCoolTime < 0.5f)
             {

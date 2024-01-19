@@ -56,7 +56,6 @@ public class AOEAura : MonoBehaviour
             enemyRb.freezeRotation = false;
             other.gameObject.GetComponent<EnemyController>().SetDeath();
             enemyRb.AddForce(knockbackForce * forceDirection, ForceMode.Impulse);
-            Destroy(other.gameObject, 4);
         }
     }
 }

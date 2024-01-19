@@ -283,7 +283,6 @@ public class PlayerController : MonoBehaviour
                 forceDirection += Vector3.up * 0.3f;
                 collision.gameObject.GetComponent<Rigidbody>().freezeRotation = false;
                 collision.gameObject.GetComponent<EnemyController>().SetDeath();
-                Destroy(collision.gameObject, 4);
             }
 
             //If it collides with an enemy, it suffers damage and is briefly invincible and fluidized.

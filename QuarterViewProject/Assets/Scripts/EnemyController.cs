@@ -17,8 +17,19 @@ public class EnemyController : MonoBehaviour
     Material enemyMat;
     Animator enemyAnim;
     AudioSource enemyAudio;
+    float deathCount;
 
     bool isAlive;
+
+    public void Initialize()
+    {
+        isAlive = true;
+        gameObject.layer = 6;
+        enemyMat.color = Color.white;
+        enemyAnim.enabled = true;
+        enemyRb.velocity = Vector3.zero;
+        enemyRb.freezeRotation = true;
+    }
 
     // Start is called before the first frame update
     void Awake()
@@ -49,7 +60,7 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(isAlive)
+        if (isAlive)
         {
             playerDirection = (player.transform.position - transform.position).normalized;
             playerDirection.y = 0;
@@ -57,7 +68,16 @@ public class EnemyController : MonoBehaviour
             {
                 EnemyMove();
             }
-        } 
+        }
+        else
+        {
+            deathCount += Time.deltaTime;
+            if(deathCount > 4)
+            {
+                deathCount = 0;
+                ObjectPoolManager.instance.InsertQueue(this.gameObject);
+            }
+        }
     }
 
     private void EnemyMove()
@@ -74,7 +94,6 @@ public class EnemyController : MonoBehaviour
             Vector3 knockBackDir = -playerDirection;
             enemyRb.freezeRotation = false;
             enemyRb.AddForce(knockBackDir * knockBackForce, ForceMode.Impulse);
-            Destroy(gameObject, 4f);
             SetDeath();
         }
     }
